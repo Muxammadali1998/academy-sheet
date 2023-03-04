@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Group;
+namespace App\Http\Controllers\Lesson;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Controllers\Controller;
 
+use App\Models\Lesson;
 use App\Models\Group;
 use Illuminate\Http\Request;
 
-class GroupController extends Controller
+class LessonController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,15 +22,14 @@ class GroupController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $group = Group::where('Name', 'LIKE', "%$keyword%")
-                ->orWhere('img', 'LIKE', "%$keyword%")
-                ->orWhere('teacher', 'LIKE', "%$keyword%")
+            $lesson = Lesson::where('name', 'LIKE', "%$keyword%")
+                ->orWhere('group_id', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
-            $group = Group::latest()->paginate($perPage);
+            $lesson = Lesson::latest()->paginate($perPage);
         }
 
-        return view('group.index', compact('group'));
+        return view('lesson.index', compact('lesson'));
     }
 
     /**
@@ -39,7 +39,9 @@ class GroupController extends Controller
      */
     public function create()
     {
-        return view('group.create');
+        $groups = Group::all();
+
+        return view('lesson.create', compact('groups'));
     }
 
     /**
@@ -52,15 +54,14 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'Name' => 'required',
-			'img' => 'required',
-			'teacher' => 'required'
+			'name' => 'required',
+			'group_id' => 'required'
 		]);
         $requestData = $request->all();
         
-        Group::create($requestData);
+        Lesson::create($requestData);
 
-        return redirect('group/group')->with('flash_message', 'Group added!');
+        return redirect('lesson/lesson')->with('flash_message', 'Lesson added!');
     }
 
     /**
@@ -72,9 +73,9 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        $group = Group::findOrFail($id);
+        $lesson = Lesson::findOrFail($id);
 
-        return view('group.show', compact('group'));
+        return view('lesson.show', compact('lesson'));
     }
 
     /**
@@ -86,9 +87,11 @@ class GroupController extends Controller
      */
     public function edit($id)
     {
-        $group = Group::findOrFail($id);
+        $lesson = Lesson::findOrFail($id);
+        $groups = Group::all();
 
-        return view('group.edit', compact('group'));
+
+        return view('lesson.edit', compact('lesson','groups'));
     }
 
     /**
@@ -102,16 +105,15 @@ class GroupController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'Name' => 'required',
-			'img' => 'required',
-			'teacher' => 'required'
+			'name' => 'required',
+			'group_id' => 'required'
 		]);
         $requestData = $request->all();
         
-        $group = Group::findOrFail($id);
-        $group->update($requestData);
+        $lesson = Lesson::findOrFail($id);
+        $lesson->update($requestData);
 
-        return redirect('group/group')->with('flash_message', 'Group updated!');
+        return redirect('lesson/lesson')->with('flash_message', 'Lesson updated!');
     }
 
     /**
@@ -123,9 +125,14 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        Group::destroy($id);
+        Lesson::destroy($id);
 
-        return redirect('group/group')->with('flash_message', 'Group deleted!');
+        return redirect('lesson/lesson')->with('flash_message', 'Lesson deleted!');
     }
- 
+    public function filter($id)
+    {
+        $lesson = Lesson::where('group_id', $id)->paginate(20);
+        
+        return view('lesson.index',  compact('lesson'));
+    }
 }

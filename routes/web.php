@@ -36,5 +36,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function(){
 require __DIR__.'/auth.php';
 
 
-Route::resource('group/group', 'Group\GroupController');
+Route::resource('group/group', 'App\Http\Controllers\Group\GroupController');
 Route::resource('student/student', 'App\Http\Controller\studentController');
+Route::resource('lesson/lesson', 'App\Http\Controllers\Lesson\LessonController');
+Route::resource('monitoring/monitoring', 'App\Http\Controllers\monitoring\MonitoringController');
+Route::get('/student_filter/{id}',[App\Http\Controller\studentController::class, 'filter'])->name('student_filter');
+Route::get('/lesson_filter/{id}',[App\Http\Controllers\Lesson\LessonController::class, 'filter'])->name('lesson_filter');

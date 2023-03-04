@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
 use App\Models\student;
+use App\Models\Group;
 use Illuminate\Http\Request;
 
 class studentController extends Controller
@@ -39,7 +40,9 @@ class studentController extends Controller
      */
     public function create()
     {
-        return view('student.create');
+        $groups = Group::all();
+
+        return view('student.create', compact('groups'));
     }
 
     /**
@@ -85,8 +88,9 @@ class studentController extends Controller
     public function edit($id)
     {
         $student = student::findOrFail($id);
+        $groups = Group::all();
 
-        return view('student.edit', compact('student'));
+        return view('student.edit', compact('student','groups'));
     }
 
     /**
@@ -122,5 +126,10 @@ class studentController extends Controller
         student::destroy($id);
 
         return redirect('student/student')->with('flash_message', 'student deleted!');
+    }
+    public function filter($id)
+    {
+        $student = Student::where('group_id', $id)->paginate(20);
+        return view('student.index', compact('student'));
     }
 }

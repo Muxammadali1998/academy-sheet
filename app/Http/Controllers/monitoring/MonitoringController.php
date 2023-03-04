@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Group;
+namespace App\Http\Controllers\monitoring;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Controllers\Controller;
 
-use App\Models\Group;
+use App\Models\Monitoring;
 use Illuminate\Http\Request;
 
-class GroupController extends Controller
+class MonitoringController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,15 +21,17 @@ class GroupController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $group = Group::where('Name', 'LIKE', "%$keyword%")
-                ->orWhere('img', 'LIKE', "%$keyword%")
-                ->orWhere('teacher', 'LIKE', "%$keyword%")
+            $monitoring = Monitoring::where('status', 'LIKE', "%$keyword%")
+                ->orWhere('reating', 'LIKE', "%$keyword%")
+                ->orWhere('lesson_id', 'LIKE', "%$keyword%")
+                ->orWhere('student_id', 'LIKE', "%$keyword%")
+                ->orWhere('group_id', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
-            $group = Group::latest()->paginate($perPage);
+            $monitoring = Monitoring::latest()->paginate($perPage);
         }
 
-        return view('group.index', compact('group'));
+        return view('monitoring.index', compact('monitoring'));
     }
 
     /**
@@ -39,7 +41,7 @@ class GroupController extends Controller
      */
     public function create()
     {
-        return view('group.create');
+        return view('monitoring.create');
     }
 
     /**
@@ -52,15 +54,17 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-			'Name' => 'required',
-			'img' => 'required',
-			'teacher' => 'required'
+			'status' => 'required',
+			'reating' => 'required',
+			'lesson_id' => 'required',
+			'student_id' => 'required',
+			'group_id' => 'required'
 		]);
         $requestData = $request->all();
         
-        Group::create($requestData);
+        Monitoring::create($requestData);
 
-        return redirect('group/group')->with('flash_message', 'Group added!');
+        return redirect('monitoring/monitoring')->with('flash_message', 'Monitoring added!');
     }
 
     /**
@@ -72,9 +76,9 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        $group = Group::findOrFail($id);
+        $monitoring = Monitoring::findOrFail($id);
 
-        return view('group.show', compact('group'));
+        return view('monitoring.show', compact('monitoring'));
     }
 
     /**
@@ -86,9 +90,9 @@ class GroupController extends Controller
      */
     public function edit($id)
     {
-        $group = Group::findOrFail($id);
+        $monitoring = Monitoring::findOrFail($id);
 
-        return view('group.edit', compact('group'));
+        return view('monitoring.edit', compact('monitoring'));
     }
 
     /**
@@ -102,16 +106,18 @@ class GroupController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-			'Name' => 'required',
-			'img' => 'required',
-			'teacher' => 'required'
+			'status' => 'required',
+			'reating' => 'required',
+			'lesson_id' => 'required',
+			'student_id' => 'required',
+			'group_id' => 'required'
 		]);
         $requestData = $request->all();
         
-        $group = Group::findOrFail($id);
-        $group->update($requestData);
+        $monitoring = Monitoring::findOrFail($id);
+        $monitoring->update($requestData);
 
-        return redirect('group/group')->with('flash_message', 'Group updated!');
+        return redirect('monitoring/monitoring')->with('flash_message', 'Monitoring updated!');
     }
 
     /**
@@ -123,9 +129,8 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        Group::destroy($id);
+        Monitoring::destroy($id);
 
-        return redirect('group/group')->with('flash_message', 'Group deleted!');
+        return redirect('monitoring/monitoring')->with('flash_message', 'Monitoring deleted!');
     }
- 
 }
