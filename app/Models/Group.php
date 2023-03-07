@@ -31,6 +31,16 @@ class Group extends Model
      */
     protected $fillable = ['Name', 'img', 'teacher'];
 
+    public function students()
+    {
+        return $this->hasMany(student::class);
+    }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
     
 
     /**

@@ -52,7 +52,7 @@
                                 @foreach($group as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->Name }}</td><td>{{ $item->img }}</td><td>{{ $item->teacher }}</td><td><a href="{{ route('student_filter', $item->id) }}">stuents {{ $item->students ? ' '. count($item->students) : ' 0' }}</a></td> <td><a href="{{ route('lesson_filter', $item->id) }}">lesons {{ $item->students ? ' '. count($item->students) : ' 0' }}</a></td>
+                                        <td>{{ $item->Name }}</td><td>{{ $item->img }}</td><td>{{ $item->teacher }}</td><td><a href="{{ route('student_filter', $item->id) }}">stuents {{ $item->students ? ' '. count($item->students) : ' 0' }}</a></td> <td><a href="{{ route('lesson_filter', $item->id) }}">lesons {{ $item->lessons ? ' '. count($item->lessons) : ' 0' }}</a></td>
                                         <td>
                                             <a class="btn btn-icon btn-primary" href="{{ url('/group/group/' . $item->id) }}" title="View Group"><i class="fas fa-eye"></i></a>
                                             <a class="btn btn-icon btn-info" href="{{ url('/group/group/' . $item->id . '/edit') }}" title="Edit Group"><i class="far fa-edit"></i></a>

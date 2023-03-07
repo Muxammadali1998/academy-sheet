@@ -43,6 +43,12 @@ class LessonController extends Controller
 
         return view('lesson.create', compact('groups'));
     }
+    public function createid($id)
+    {
+        $group = Group::find($id);
+
+        return view('lesson.create', compact('group'));
+    }
 
     /**
      * Store a newly created resource in storage.
